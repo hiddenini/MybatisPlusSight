@@ -5,21 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.io.Serializable;
-
-/**
- * @author xz
- * @date 2020/4/22 15:31
- **/
 @Data
-@TableName("t_user")
-public class User implements Serializable {
+@TableName("t_group")
+public class Group {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
     private String name;
-    private Integer age;
-    private String email;
-    private int groupId;
-    private long memberId;
-
+    private Long groupId;
+    private Long count;
+    private String merchantId;
 }

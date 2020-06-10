@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xz.config.MybatisPlusConfig;
+import com.xz.entity.Group;
 import com.xz.entity.Store;
 import com.xz.entity.User;
+import com.xz.mapper.GroupMapper;
 import com.xz.mapper.StoreMapper;
 import com.xz.mapper.UserMapper;
 import com.xz.service.UserService;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -41,7 +44,28 @@ public class SampleTest {
     private StoreMapper storeMapper;
 
     @Autowired
+    private GroupMapper groupMapper;
+
+    @Autowired
     private UserService userService;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Test
+    public void exists() {
+        System.out.println(("----- exists method test ------"));
+        String createSql = "select count(*) from t_store_0007";
+        jdbcTemplate.execute(createSql);
+    }
+
+    @Test
+    public void createTable() {
+        System.out.println(("----- createTable method test ------"));
+        String createSql = "create table " + " t_index_0003" + "  like  t_index";
+        jdbcTemplate.execute(createSql);
+    }
+
 
     @Test
     public void selectList() {
@@ -96,7 +120,38 @@ public class SampleTest {
         /**
          * 主键id为啥不自增?
          */
-        log.info("主键:{}", user.getUserId());
+        log.info("主键:{}", user.getId());
+    }
+
+    @Test
+    public void saveGroup() {
+        Group group = new Group();
+        for (long i = 0; i < 33; i++) {
+            group.setCount(i);
+            group.setName("分组" + i);
+            group.setGroupId(i);
+            groupMapper.insert(group);
+        }
+        /**
+         * 主键id为啥不自增?
+         */
+        log.info("主键:{}", group.getId());
+    }
+
+
+    @Test
+    public void save1000() {
+        System.out.println(("----- save save1000 test ------"));
+        for (int i = 1; i < 50; i++) {
+            User user = new User();
+            user.setName("tgy" + i);
+            user.setGroupId(2);
+            user.setMemberId(i);
+            user.setEmail("7810**@qq.com");
+            user.setAge(26);
+            userMapper.insert(user);
+            log.info("主键:{}", user.getId());
+        }
     }
 
 
@@ -111,7 +166,7 @@ public class SampleTest {
     public void saveOrUpdate() {
         System.out.println(("----- saveOrUpdate method test ------"));
         User user = new User();
-        user.setUserId(1254719839229091845l);
+        user.setId(1254719839229091845l);
         user.setName("lz1");
         user.setAge(25);
         userService.saveOrUpdate(user);
@@ -206,8 +261,9 @@ public class SampleTest {
         Page<User> page = new Page();
         page.setCurrent(1);
         page.setSize(2);
-        IPage<User> ipage = userMapper.selectPageVo(page);
-        log.info("userList:{}", JSON.toJSONString(ipage.getRecords()));
+        IPage<User> userIPage = userMapper.selectPageVo(page);
+        log.info("userIPage:{}", userIPage);
+        log.info("userList:{}", JSON.toJSONString(userIPage.getRecords()));
     }
 
     @Test
