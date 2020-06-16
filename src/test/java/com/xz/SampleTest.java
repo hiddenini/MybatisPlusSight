@@ -6,9 +6,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xz.config.MybatisPlusConfig;
+import com.xz.entity.Commodity;
 import com.xz.entity.Group;
 import com.xz.entity.Store;
 import com.xz.entity.User;
+import com.xz.mapper.CommodityMapper;
 import com.xz.mapper.GroupMapper;
 import com.xz.mapper.StoreMapper;
 import com.xz.mapper.UserMapper;
@@ -51,6 +53,9 @@ public class SampleTest {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private CommodityMapper commodityMapper;
 
     @Test
     public void exists() {
@@ -136,6 +141,18 @@ public class SampleTest {
          * 主键id为啥不自增?
          */
         log.info("主键:{}", group.getId());
+    }
+
+    @Test
+    public void saveCommodity() {
+        Commodity commodity = new Commodity();
+        for (long i = 0; i < 33; i++) {
+            commodity.setCommodityName("商品" + i);
+            commodity.setCommodityId(String.valueOf(i));
+            commodity.setGroupId(String.valueOf(1));
+            commodityMapper.insert(commodity);
+        }
+        log.info("主键:{}", commodity.getId());
     }
 
 

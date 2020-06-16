@@ -6,13 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("t_group")
-public class Group {
+@TableName("t_commodity")
+public class Commodity {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
-    private String name;
-    private Long groupId;
-    private Long count;
-    private String merchantId;
-    private String groupType;
+    private String commodityName;
+    private String commodityId;
+    private String groupId;
 }
