@@ -10,13 +10,18 @@ import com.xz.entity.*;
 import com.xz.mapper.GroupMapper;
 import com.xz.mapper.UserMapper;
 import com.xz.service.CommodityService;
+import com.xz.service.CouponService;
 import com.xz.service.GroupService;
 import com.xz.service.UserService;
+import com.xz.util.HttpClientUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +35,10 @@ public class PlusController {
 
     @Autowired
     private UserService userService;
+
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private GroupService groupService;
@@ -82,6 +91,26 @@ public class PlusController {
         responseVo.setPageSize(pageSize);
         responseVo.setIds(list);
         responseVo.setCount(userIPage.getTotal());
+        return responseVo;
+
+    }
+
+
+    @RequestMapping(value = "/geCouponPage", method = RequestMethod.GET)
+    public CouponResponseVo geCouponPage(@RequestParam Integer pageNo,
+                                         @RequestParam Integer pageSize) {
+        Page<Coupon> page = new Page();
+        page.setCurrent(pageNo);
+        page.setSize(pageSize);
+        String merchant_id = "1";
+        QueryWrapper<Coupon> queryWrapper = new QueryWrapper<Coupon>().eq("merchant_id", merchant_id);
+        IPage<Coupon> couponIPage = couponService.page(page, queryWrapper);
+        List<Coupon> records = couponIPage.getRecords();
+        CouponResponseVo responseVo = new CouponResponseVo();
+        responseVo.setPageNum(pageNo);
+        responseVo.setPageSize(pageSize);
+        responseVo.setCount(couponIPage.getTotal());
+        responseVo.setList(records);
         return responseVo;
 
     }
@@ -155,5 +184,20 @@ public class PlusController {
             list.add(nameValueBean);
         });
         return list;
+    }
+
+    @RequestMapping("/groupCheck")
+    public String groupCheck(@RequestBody GroupCheckBean groupCheckBean) {
+        RouteBean routeBean = new RouteBean();
+        BeanUtils.copyProperties(groupCheckBean, routeBean);
+        routeBean.setPass(true);
+        System.out.println("routeBean:" + JSON.toJSONString(routeBean));
+        //回调
+        // 请求头
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json; charset=utf-8");
+        headers.put("accept", "application/json; charset=utf-8");
+        String result = HttpClientUtil.dopost("http://localhost:3003/service-marketing.api/push/route", JSON.toJSONString(routeBean), headers);
+        return "abc";
     }
 }

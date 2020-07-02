@@ -6,14 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xz.config.MybatisPlusConfig;
-import com.xz.entity.Commodity;
-import com.xz.entity.Group;
-import com.xz.entity.Store;
-import com.xz.entity.User;
-import com.xz.mapper.CommodityMapper;
-import com.xz.mapper.GroupMapper;
-import com.xz.mapper.StoreMapper;
-import com.xz.mapper.UserMapper;
+import com.xz.entity.*;
+import com.xz.mapper.*;
 import com.xz.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
@@ -25,6 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author xz
@@ -47,6 +42,9 @@ public class SampleTest {
 
     @Autowired
     private GroupMapper groupMapper;
+
+    @Autowired
+    private CouponMapper couponMapper;
 
     @Autowired
     private UserService userService;
@@ -142,6 +140,27 @@ public class SampleTest {
          */
         log.info("主键:{}", group.getId());
     }
+
+    @Test
+    public void saveCoupon() {
+        Coupon coupon = new Coupon();
+        for (long i = 0; i < 33; i++) {
+            coupon.setName("测试券" + i);
+            coupon.setMerchantId("1");
+            if ((i & 1) == 1) {
+                //奇数
+                double random1 = Math.random() * 10;
+                String douStr = String.format("%.2f", random1);
+                coupon.setDiscount(douStr + "折");
+            } else {
+                //偶数
+                coupon.setDiscount("￥" + i);
+            }
+            couponMapper.insert(coupon);
+        }
+        log.info("主键:{}", coupon.getId());
+    }
+
 
     @Test
     public void saveCommodity() {
