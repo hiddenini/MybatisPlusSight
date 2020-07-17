@@ -15,4 +15,13 @@ public interface UserMapper extends BaseMapper<User> {
     @Select("select * from t_user")
     IPage<User> selectPageVo(Page<?> page);
 
+
+    @Select("select * from t_user where id=#{id}")
+    User selectByUserId(Long id);
+
+    @Select("select * from t_user where name=#{name}")
+    User selectByUserName(String name);
+
+    @Select("select * from t_user where member_id=#{memberId}")
+    User selectByUserMemberId(Long memberId);
 }

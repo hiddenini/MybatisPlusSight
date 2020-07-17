@@ -309,4 +309,11 @@ public class SampleTest {
         List<User> list = userMapper.selectList(eq);
         log.info("list:{}", JSON.toJSONString(list));
     }
+
+    @Test
+    public void testService() {
+        System.out.println(("----- testService method test ------"));
+        User one = userService.getOne(new QueryWrapper<User>().eq("name", "tgy1"));
+        log.info("one:", JSON.toJSONString(one));
+    }
 }
