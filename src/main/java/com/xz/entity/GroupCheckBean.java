@@ -23,7 +23,7 @@ public class GroupCheckBean implements Serializable {
     private String itemIds;
 
     //商户id
-    private String merchantId;
+    private String subMerchantId;
 
     //会员的分组
     private String userGroup;

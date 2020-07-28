@@ -19,8 +19,13 @@ public class ParamController {
         response.setMessage("success");
         if (b.hasErrors()) {
             response.setCode(201);
-            System.out.println(b.getFieldError().getDefaultMessage());
-            response.setMessage(b.getFieldError().getDefaultMessage());
+            StringBuilder error = new StringBuilder();
+            b.getAllErrors().forEach(objectError -> {
+                System.out.println(objectError.getDefaultMessage());
+                error.append(objectError.getDefaultMessage());
+            });
+            System.out.println(error.toString());
+            response.setMessage(error.toString());
             return response;
         }
 

@@ -25,5 +25,5 @@ public class RouteBean implements Serializable {
 	// 是否通过校验
 	private Boolean pass;
 
-	private String merchantId;
+	private String subMerchantId;
 }

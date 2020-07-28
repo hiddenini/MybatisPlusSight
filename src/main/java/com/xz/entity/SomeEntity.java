@@ -8,11 +8,14 @@ import javax.validation.constraints.NotNull;
 @Valid
 @Data
 public class SomeEntity {
-    @NotNull(message = "name不能为空")
-    private String name;
 
     @NotNull(message = "address不能为空")
     private String address;
+
+    @NotNull(message = "name不能为空")
+    private String name;
+
+
 
     private String location;
 
