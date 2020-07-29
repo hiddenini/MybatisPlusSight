@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xz.entity.User;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * @author xz
@@ -24,4 +25,7 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select * from t_user where member_id=#{memberId}")
     User selectByUserMemberId(Long memberId);
+
+    @Update("update t_user set member_id=member_id+#{num} where id=9548")
+    Integer update(Integer num);
 }

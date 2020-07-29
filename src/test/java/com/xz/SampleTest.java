@@ -316,4 +316,12 @@ public class SampleTest {
         User one = userService.getOne(new QueryWrapper<User>().eq("name", "tgy1"));
         log.info("one:", JSON.toJSONString(one));
     }
+
+
+    @Test
+    public void updateM() {
+        System.out.println(("----- updateM method test ------"));
+        userMapper.update(11);
+    }
+
 }
