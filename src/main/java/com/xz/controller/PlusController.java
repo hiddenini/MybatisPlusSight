@@ -7,6 +7,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xz.entity.*;
+import com.xz.entity.reward.GiftBagDetailDto;
+import com.xz.entity.reward.RewardDetailDto;
+import com.xz.entity.reward.RewardRequestBean;
+import com.xz.entity.reward.RewardResultDto;
 import com.xz.mapper.GroupMapper;
 import com.xz.mapper.UserMapper;
 import com.xz.service.CommodityService;
@@ -14,6 +18,7 @@ import com.xz.service.CouponService;
 import com.xz.service.GroupService;
 import com.xz.service.UserService;
 import com.xz.util.HttpClientUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +33,7 @@ import java.util.stream.Collectors;
  * @author xz
  * @date 2020/4/22 17:07
  **/
+@Slf4j
 @RestController
 public class PlusController {
     @Autowired
@@ -200,4 +206,26 @@ public class PlusController {
         String result = HttpClientUtil.dopost("http://localhost:3003/service-marketing.api/push/route", JSON.toJSONString(routeBean), headers);
         return "abc";
     }
+
+    @RequestMapping("/sendReward")
+    public void sendReward(@RequestBody RewardRequestBean rewardRequestBean) {
+        log.info("enter sendReward params:{}", JSON.toJSONString(rewardRequestBean));
+        RewardResultDto rewardResultDto = new RewardResultDto();
+        BeanUtils.copyProperties(rewardRequestBean, rewardResultDto);
+        RewardDetailDto rewardDetailDto = new RewardDetailDto();
+        GiftBagDetailDto giftBagDetailDto = new GiftBagDetailDto();
+        rewardDetailDto.setIntegralSuccess(true);
+        rewardDetailDto.setIntegral(100l);
+        giftBagDetailDto.setIntegralSuccess(true);
+        giftBagDetailDto.setIntegral(200l);
+        rewardResultDto.setRewardDetailDto(rewardDetailDto);
+        rewardResultDto.setGiftBagDetailDto(giftBagDetailDto);
+        Map<String, String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json; charset=utf-8");
+        headers.put("accept", "application/json; charset=utf-8");
+        String result = HttpClientUtil.dopost("http://localhost:3003/service-marketing.api/callback/reward", JSON.toJSONString(rewardResultDto), headers);
+
+    }
+
+
 }
